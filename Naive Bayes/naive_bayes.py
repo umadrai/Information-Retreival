@@ -123,10 +123,7 @@ class NaiveBayes(object):
 
         for i, matrix in enumerate(matrices):
             column_summed_matrix = csr_matrix.sum(matrix, axis=0)
-            # column_summed_matrix = numpy.sum(matrix.todense(), axis=0)
-
             n_vocab = len(word_vocab.keys())
-            # print(n_vocab)
             nC = column_summed_matrix.sum() + self.e * n_vocab
             print(nC)
             column_summed_matrix += self.e
@@ -141,8 +138,6 @@ class NaiveBayes(object):
         self.p_wc = p_row
         self.log_p_wc = numpy.log(self.p_wc)
         print(self.log_p_wc)
-
-        # TODO!
 
     def predict(self, X):
         """
@@ -165,8 +160,7 @@ class NaiveBayes(object):
         result_matrix = self.log_p_wc.dot(x_transpose)
 
         predictions = numpy.argmax(result_matrix.todense(), axis=0)
-        # print(predictions)
-        return predictions  # TODO!
+        return predictions
 
     def evaluate(self, X, y):
         """
@@ -186,7 +180,6 @@ class NaiveBayes(object):
                     ret[y[i]] += 1
 
         for xclass in self.classes:
-            # print(xclass)
             recall[xclass] = (ret[xclass] / (y == xclass).sum()) * 100
             precision[xclass] = (ret[xclass] / (result == xclass).sum()) * 100
             fms[xclass] = (2 * precision[xclass] * recall[xclass]) / \
@@ -198,8 +191,6 @@ class NaiveBayes(object):
     def print_pc_values(self, prec, recall):
         sorted_row_idx = numpy.argsort(self.p_wc, axis=1)[
                          :, self.p_wc.shape[1] - 30::]
-
-        # print(sorted_row_idx)
         for i, prob in enumerate(self.p_c):
             class_name = self.get_class_from_value(i)
             print("Probability for class ", class_name, ": ",
@@ -234,12 +225,6 @@ def main():
     n.train(X_train, y_train, word_vocab)
     n.predict(X_test)
     n.evaluate(X_test, y_test)
-    # do training on training dataset
-
-    # run the evaluation on the test dataset
-
-    # print the 30 words with the highest p_wc values per class
-
 
 if __name__ == '__main__':
     main()
